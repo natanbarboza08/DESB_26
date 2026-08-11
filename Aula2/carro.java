@@ -1,11 +1,10 @@
 package Aula2;
 
-public class carro {
+public class Carro {
     String marca;
     String cor;
 
     void buzinar() {
-        System.out.println("O carro está ligado");
+        System.out.println("Bibi");
     }
 }
-

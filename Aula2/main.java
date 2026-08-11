@@ -1,8 +1,8 @@
 package Aula2;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
-        carro meuCarro = new carro();
+        Carro meuCarro = new Carro();
 
         meuCarro.marca = "Fiat";
         meuCarro.cor = "Vermelho";
