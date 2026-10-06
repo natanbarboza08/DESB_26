@@ -1,4 +1,4 @@
-package com.senai.aula08.models;
+package com.senai.oversight.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,93 +11,89 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-// Cria tabela para relacionar com o banco de dados
-@Entity 
-@Table (name="consultor") // cria tabela do consultor
+@Entity
+@Table(name = "consultor")
 public class Consultor {
-@Id 
-@GeneratedValue (strategy = GenerationType.IDENTITY)
-@Column (name = "id_consultor")
-private Long idConsultor;
 
-// Cria coluna da tabela consultor
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_consultor")
+    private Long idConsultor;
 
-@Column (name= "nome",nullable = false, length = 150)
-private  String nome;
+    @Column(name = "nome", nullable = false, length = 150)
+    private String nome;
 
-@Column (name = "email", nullable = false, unique = true, length = 150)
-private  String email;
+    @Column(name = "email", nullable = false, unique = true, length = 150)
+    private String email;
 
-@Column (name = "senha", nullable = false, unique = true, length = 150)
-private  String senha;
+    @Column(name = "senha", nullable = false, length = 150)
+    private String senha;
 
-@Column (name = "telefone", length = 30)
-private  String telefone;
+    @Column(name = "telefone", length = 30)
+    private String telefone;
 
-// Relacionamento
-@OneToMany (mappedBy = "consultor")
-private List<Cliente> clientes = new ArrayList<>(); // Lista, pois o consultor pode ter varios clientes
+    @OneToMany(mappedBy = "consultor")
+    private List<Cliente> clientes = new ArrayList<>();
 
-// Cria o construtor cliente vazio, pois posso criar um cliente inicial sem passar parametros quando cria
+    public Consultor() {
+    }
 
-public Consultor(){
+    public Consultor(String nome, String email, String senha, String telefone) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.telefone = telefone;
+    }
 
-}
+    public Long getIdConsultor() {
+        return idConsultor;
+    }
 
-// Cria outro construtor com parametros para iniciar
+    public Long getIdLong() {
+        return idConsultor;
+    }
 
-public Consultor(String nome, String email, String senha,String telefone){
-    this.nome = nome;
-    this.email = email;
-    this.telefone = telefone;
-    this.senha = senha;
-}
+    public void setIdConsultor(Long idConsultor) {
+        this.idConsultor = idConsultor;
+    }
 
-public Long getIdLong(){
-    return idConsultor;
-}
+    public String getNome() {
+        return nome;
+    }
 
-public  void setIdConsultor(Long idConsultor){
-    this.idConsultor = idConsultor;
-}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-public String getNome(){
-    return  nome;
-}
+    public String getEmail() {
+        return email;
+    }
 
-public void setNome(String nome){
-    this.nome = nome;
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-}
+    public String getSenha() {
+        return senha;
+    }
 
-public String getEmail(){
-    return  email;
-}
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-public void setSenha(String senha){
-    this.senha = senha;
-}
-public String getSenha(){
-    return senha;
-}
-public void setEmail(String email){
-    this.email = email;
-}
+    public String getTelefone() {
+        return telefone;
+    }
 
-public String getTelefone(){
-    return telefone;
-}
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 
-public  void setTelefone(String telefone){
-    this.telefone = telefone;
-}
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
 
-public List<Cliente> getClientes(){
-    return clientes;
-}
-
-public  void setClientes(List<Cliente>clientes){
-    this.clientes = clientes;
-}
-    
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
+    }
 }

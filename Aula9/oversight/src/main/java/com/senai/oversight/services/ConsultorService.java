@@ -1,138 +1,78 @@
-package com.senai.aula08.service;
+package com.senai.oversight.services;
 
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
+import org.springframework.stereotype.Service;
 
-import org.springframework.stereotype.Service; // Biblioteca que permite colocar a anotação service
-
-import com.senai.aula08.models.Consultor;
-import com.senai.aula08.repository.ConsultorRepository;
+import com.senai.oversight.models.Consultor;
+import com.senai.oversight.repository.ConsultorRepository;
 
 import jakarta.transaction.Transactional;
 
-// Anotação de service é onde vai ter as regras de negocio
-
-@Service 
+@Service
 public class ConsultorService {
 
-    // Cria a variavel Consultor repository
+    private final ConsultorRepository repository;
 
-    private final ConsultorRepository repository; // cria a variavel repository que permite manipular o banco de dados
+    public ConsultorService(ConsultorRepository repository) {
+        this.repository = repository;
+    }
 
-
-    // Cria o construtor
-
-    public ConsultorService(
-        ConsultorRepository repository){
-            this.repository = repository;
+    @Transactional
+    public Consultor criar(Consultor consultor) {
+        if (consultor.getNome() == null || consultor.getNome().isBlank()) {
+            throw new RuntimeException("Nome é obrigatório !");
         }
 
-
-    // ======
-    // CREATE
-    // ======
-
-    @Transactional 
-    public Consultor criar(Consultor consultor){
-        if(consultor.getNome() == null || consultor.getNome().isBlank()){
-            throw new RuntimeException(
-                "Nome é obrigatório !"
-            );
+        if (consultor.getEmail() == null || consultor.getEmail().isBlank()) {
+            throw new RuntimeException("Email é obrigatório !");
         }
 
-
-        if(consultor.getEmail() == null || consultor.getEmail().isBlank()){
-
-            throw new RuntimeException(
-                "Email é obrigatório !"
-            );
-
+        if (consultor.getSenha() == null || consultor.getSenha().isBlank()) {
+            throw new RuntimeException("Senha é obrigatória !");
         }
 
-
-        if(consultor.getSenha() == null || consultor.getSenha().isBlank()){
-            throw new RuntimeException(
-                "Senha é obrigatória !"
-            );
-        }
-
-
-
-        // Verifica se já exise consultor com o mesmo email
-
-
-        if(repository.findByEmail(consultor.getEmail()).isPresent()){
+        if (repository.findByEmail(consultor.getEmail()).isPresent()) {
             throw new RuntimeException("Email já cadastrado");
         }
+
         return repository.save(consultor);
-
     }
 
+    public Consultor login(String email, String senha) {
+        Consultor consultor = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Consultor não encontrado"));
 
-// Login 
+        if (!consultor.getSenha().equals(senha)) {
+            throw new RuntimeException("Senha inválida");
+        }
 
-// Cria a função
-
-public Consultor login(String email, String senha){
-
-    Consultor consultor = repository.findByEmail(email).orElseThrow(()->new RuntimeException("Consultor não encontrado"));
-
-
-    // Validação
-    if(!consultor.getSenha().equals(senha)){
-        throw new RuntimeException("Senha inválida");
+        return consultor;
     }
 
-    return consultor;
+    public List<Consultor> listar() {
+        return repository.findAll();
+    }
 
-}
+    public Consultor buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Consultor não encontrado"));
+    }
 
+    @Transactional
+    public Consultor atualizar(Long id, Consultor dados) {
+        Consultor consultor = buscarPorId(id);
 
-// READ - todos
+        consultor.setNome(dados.getNome());
+        consultor.setEmail(dados.getEmail());
+        consultor.setSenha(dados.getSenha());
 
-public List<Consultor> listar(){
-    return repository.findAll();
-}
+        return repository.save(consultor);
+    }
 
-// READ por ID
-
-public Consultor buscarPorId(Long id){
-    return repository.findById(id).orElseThrow(()->new RuntimeException("Consultor não encontrado"));
-}
-
-
-// UPDATE
-
-@Transactional 
-public Consultor atualizar(
-    Long id, Consultor dados
-){
-
-    Consultor consultor = buscarPorId(id);
-
-
-    consultor.setNome(dados.getNome()); // pega o nome do consultor
-
-
-    consultor.setEmail(dados.getEmail());
-
-
-    consultor.setSenha(dados.getSenha());
-
-
-    return  repository.save(consultor);
-}
-
-
-// Delete
-
-@Transactional 
-public void excluir(Long id){
-    Consultor consultor = buscarPorId(id);
-
-    repository.deleteById(
-        consultor.getIdLong() );
-}
-    
+    @Transactional
+    public void excluir(Long id) {
+        Consultor consultor = buscarPorId(id);
+        repository.deleteById(consultor.getIdLong());
+    }
 }

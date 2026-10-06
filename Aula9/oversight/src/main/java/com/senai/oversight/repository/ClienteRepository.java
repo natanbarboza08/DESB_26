@@ -1,9 +1,8 @@
-package com.senai.aula08.repository;
+package com.senai.oversight.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.senai.aula08.models.Cliente;
+import com.senai.oversight.models.Cliente;
 
-public interface ClienteRepository extends JpaRepository<Cliente,Long> {
-    
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 }

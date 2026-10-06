@@ -1,10 +1,4 @@
-package com.senai.aula08.controller;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.senai.aula08.models.Consultor;
-import com.senai.aula08.service.ConsultorService;
+package com.senai.oversight.controller;
 
 import java.util.List;
 
@@ -14,94 +8,49 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.senai.oversight.models.Consultor;
+import com.senai.oversight.services.ConsultorService;
 
-// Arquivo controller é responsável por realizar as requisições http da API
-
-@RestController // indica que a classe consultor controller irá receber as requisições http
-@RequestMapping("/consultores") // cria a rota consultores
+@RestController
+@RequestMapping("/consultores")
 public class ConsultorController {
 
-    // Cria a variavel ConsultorService 
     private final ConsultorService service;
 
-    // Cria o construtor
-    public ConsultorController(
-        ConsultorService service){
-            this.service = service;
-        }
+    public ConsultorController(ConsultorService service) {
+        this.service = service;
+    }
 
-// ======
-//CREATE
-// =======
-
-@PostMapping
-public Consultor criar(
-    @RequestBody Consultor consultor){
+    @PostMapping
+    public Consultor criar(@RequestBody Consultor consultor) {
         return service.criar(consultor);
     }
 
+    @PostMapping("/login")
+    public Consultor login(@RequestBody Consultor consultor) {
+        return service.login(consultor.getEmail(), consultor.getSenha());
+    }
 
+    @GetMapping
+    public List<Consultor> listar() {
+        return service.listar();
+    }
 
-// =====
-// LOGIN
-//
-
-@PostMapping("/login")
-public Consultor login(@RequestBody Consultor consultor){
-
-    return service.login(consultor.getEmail(), consultor.getSenha());
-
-}
-
-//====
-// READ
-
-@GetMapping 
-public List<Consultor> listar(){
-    return service.listar();
-}
-
-
-// === 
-// READ por id
-// ====
-
-
-@GetMapping("/{id}")
-public Consultor buscar(
-    @PathVariable  Long id){
+    @GetMapping("/{id}")
+    public Consultor buscar(@PathVariable Long id) {
         return service.buscarPorId(id);
     }
 
-
-
-// ==== 
-// UPDATE
-// ====
-
-@PutMapping("/{id}")
-public Consultor atualizar(
-    @PathVariable Long id, @RequestBody Consultor consultor){
-        return  service.atualizar(id, consultor);
+    @PutMapping("/{id}")
+    public Consultor atualizar(@PathVariable Long id, @RequestBody Consultor consultor) {
+        return service.atualizar(id, consultor);
     }
 
-
-// ==== 
-// DELETE
-// =====
-
-@DeleteMapping("/{id}")
-public void excluir(@PathVariable Long id){
-    service.excluir(id);
+    @DeleteMapping("/{id}")
+    public void excluir(@PathVariable Long id) {
+        service.excluir(id);
+    }
 }
-
-
-
-
-
-
-    
-}
-
-
